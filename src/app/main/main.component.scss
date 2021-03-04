@@ -1,0 +1,9 @@
+.gauge {
+    .close {
+        visibility: hidden;
+    }
+    
+    &:hover .close {
+        visibility: visible;
+    }
+}
