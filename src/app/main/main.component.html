@@ -2,7 +2,9 @@
 <div class="container-fluid mt-5">
     <div class="row">
         <div *ngFor="let gauge of gauges$|async" class="gauge col text-center">
-            <google-chart class="d-inline-block" [type]="GAUGE" [data]="gauge.data" [columns]="columns" [options]="gauge.config"></google-chart>
+            <a [routerLink]="['/sonde', gauge.id]">
+                <google-chart class="d-inline-block" [type]="GAUGE" [data]="gauge.data" [columns]="columns" [options]="gauge.config"></google-chart>
+            </a>
             <button class="close btn btn-outline-primary btn-sm" (click)="hide(gauge.id)">&times;</button>
         </div> 
     </div>
