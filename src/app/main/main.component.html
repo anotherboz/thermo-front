@@ -1,11 +1,12 @@
-<div class="container mt-5">
+<button *ngIf="(nodesFilter$|async).length" class="btn btn-primary m-4 float-right" (click)="showAll()" placement="left" ngbTooltip="Afficher les éléments actuellements cachés">Tous</button>
+<div class="container-fluid mt-5">
     <div class="row">
-        <div *ngFor="let gauge of gauges$|async" class="gauge col-2">
-            <button class="close btn btn-outline-primary btn-sm float-right">&times;</button>
-            <google-chart style="width: 100%;" [type]="GAUGE" [data]="gauge.data" [columns]="columns" [options]="gauge.config"></google-chart>
-        </div>
+        <div *ngFor="let gauge of gauges$|async" class="gauge col text-center">
+            <google-chart class="d-inline-block" [type]="GAUGE" [data]="gauge.data" [columns]="columns" [options]="gauge.config"></google-chart>
+            <button class="close btn btn-outline-primary btn-sm" (click)="hide(gauge.id)">&times;</button>
+        </div> 
     </div>
     <div class="row"> 
-        <google-chart style="width: 100%;" [type]="CANDLESTICK" [data]="candlestick$|async" [options]="candlestickOptions" ></google-chart>
+        <google-chart class="col-12" [width]="'100%'" [type]="CANDLESTICK" [data]="candlestick$|async" [options]="candlestickOptions" ></google-chart>
     </div>
 </div>

@@ -6,20 +6,25 @@ import { MainComponent } from './main/main.component';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from './ui/navbar/navbar.component';
+import { CookieService } from 'ngx-cookie-service';
+import { AppRouterModule } from './router/app.router.module';
+import { SondeComponent } from './sonde/sonde.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    NavbarComponent
+    NavbarComponent,
+    SondeComponent
   ],
   imports: [
+    AppRouterModule,
     GoogleChartsModule,
     BrowserModule,
     NgbModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [ CookieService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

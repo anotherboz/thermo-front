@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ServerService } from '../services/server.service';
 import * as Model from '../models/models';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import * as Charts from 'angular-google-charts'
+import { MyCookieService } from '../services/my-cookie.service';
 
 @Component({
   selector: 'app-main',
@@ -15,36 +16,44 @@ export class MainComponent implements OnInit {
   nodes$: Observable<Model.Node[]>;
   gauges$: Observable<any>;
   candlestick$: Observable<any>;
-  candlestickOptions = { legend: 'none',};
+  nodesFilter$: BehaviorSubject<number[]>;
+  candlestickOptions = { legend: 'none', min:0 };
   GAUGE =  Charts.ChartType.Gauge;
   CANDLESTICK= Charts.ChartType.CandlestickChart;
   columns = ['Label', 'Value'];
 
-  constructor(private server: ServerService) {
+  constructor(private server: ServerService, private myCookies: MyCookieService) {
+    this.nodesFilter$ = new BehaviorSubject(myCookies.hideThermo);
   }
 
   ngOnInit(): void {
-    this.nodes$ = this.server.getTherms(moment().subtract(1, 'day').toDate(), new Date());
+    this.nodes$ = combineLatest([
+      this.nodesFilter$,
+      this.server.getTherms(moment().subtract(1, 'day').toDate(), new Date()),
+    ]).pipe(
+      map(([filter, nodes]) => nodes.filter(n => !filter.includes(n.id))));
+
     this.gauges$ = this.nodes$.pipe(map(nodes =>  nodes.map(node =>  ({
-      config: { ...node.config,  width: '100%', height: '100%' },
+      config: { ...node.config },
+      id: node.id,
       data: [[ node.nom, node.temperatures[node.temperatures.length - 1].value]]
      }))));
 
-    // this.candlestick$ = this.nodes$.pipe(map(nodes => nodes.map(node => [ node.nom, ...node.temperatures.map(t => t.value) ])));
-     this.candlestick$ = of([
-      ['sonde1', 16, 20, 20, 21 ],
-      ['sonde2', 14, 16, 18, 18 ],
-      ['sonde3', 11, 12, 17, 21 ]
-     ]);
+    this.candlestick$ = this.nodes$.pipe(map(nodes => nodes.map(node => {
+      const min = node.temperatures.reduce((min, current) => min < current.value ? min : current.value, node.temperatures[0].value);
+      const max = node.temperatures.reduce((max, current) => max > current.value ? max : current.value, node.temperatures[0].value);
+      return [ node.nom, min, min, max, max ];
+    })));
+  }
 
-    this.candlestick$.subscribe(l => console.log(l));
+  hide(id: number) {
+    const hide = [...this.nodesFilter$.value, id]
+    this.nodesFilter$.next(hide);
+    this.myCookies.hideThermo = hide;
+  }
 
-    // this.candlestick$ = of([
-    //   ['Mon', 20, 28, 38, 45],
-    //   ['Tue', 31, 38, 55, 66],
-    //   ['Wed', 50, 55, 77, 80],
-    //   ['Thu', 77, 77, 66, 50],
-    //   ['Fri', 68, 66, 22, 15]
-    // ])
+  showAll() {
+    this.nodesFilter$.next([]);
+    this.myCookies.hideThermo = [];
   }
 }
