@@ -16,11 +16,15 @@ export class MainComponent implements OnInit {
   nodes$: Observable<Model.Node[]>;
   gauges$: Observable<any>;
   candlestick$: Observable<any>;
+  linechart$: Observable<any>;
   nodesFilter$: BehaviorSubject<number[]>;
   candlestickOptions = { legend: 'none', min:0 };
+  linechartOptions = { min: 0, legend: { position: 'bottom' } };
   GAUGE =  Charts.ChartType.Gauge;
   CANDLESTICK= Charts.ChartType.CandlestickChart;
+  LINECHART = Charts.ChartType.LineChart;
   columns = ['Label', 'Value'];
+  linechartColumns = [];
 
   constructor(private server: ServerService, private myCookies: MyCookieService) {
     this.nodesFilter$ = new BehaviorSubject(myCookies.hideThermo);
@@ -44,6 +48,20 @@ export class MainComponent implements OnInit {
       const max = node.temperatures.reduce((max, current) => max > current.value ? max : current.value, node.temperatures[0].value);
       return [ node.nom, min, min, max, max ];
     })));
+
+    this.linechart$ = this.nodes$.pipe(map(nodes => {
+      this.linechartColumns = ['Heure', ...nodes.map(n => n.nom)]
+      let datas: (string|number)[][] = [];
+      if (nodes.length > 0) {
+        nodes[0].temperatures.forEach((t, index) => datas.push([
+          t.date.toLocaleTimeString('FR-fr', {hour: '2-digit', minute:'2-digit'}),
+          ...nodes.map(n => n.temperatures[index]?.value ?? 0) ]))
+      }
+      datas.push()
+      return datas;
+    }));
+
+    this.linechart$.subscribe(l => console.log(l));
   }
 
   hide(id: number) {

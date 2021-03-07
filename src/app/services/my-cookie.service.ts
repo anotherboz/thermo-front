@@ -9,8 +9,7 @@ export class MyCookieService {
   constructor(private cookieService: CookieService) { }
 
   get hideThermo(): number[] {
-
-    var hideThermo = this.cookieService.get('hideThermo');
+    const hideThermo = this.cookieService.get('hideThermo');
     if (hideThermo == null || hideThermo.length === 0) {
       return [];
     }

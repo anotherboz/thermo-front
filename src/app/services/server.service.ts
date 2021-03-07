@@ -50,16 +50,41 @@ export class ServerService {
         createdAt: new Date('2021-03-01 10:55:00'),
         config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
         temperatures:[
-          { date: moment().hours(13).minutes(53).toDate(), value: 18.0 },
-          { date: moment().hours(14).minutes(3).toDate(), value: 17.0 },
+          { date: moment().hours(13).minutes(53).toDate(), value: 15.0 },
+          { date: moment().hours(14).minutes(3).toDate(), value: 16.0 },
           { date: moment().hours(14).minutes(13).toDate(), value: 17.5 },
-          { date: moment().hours(14).minutes(23).toDate(), value: 18.0 },
-          { date: moment().hours(14).minutes(33).toDate(), value: 18.5 },
+          { date: moment().hours(14).minutes(23).toDate(), value: 19.0 },
+          { date: moment().hours(14).minutes(33).toDate(), value: 20.5 },
         ]
       },
+      {
+        id: 4,
+        nom: 'sonde4',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures:[
+          { date: moment().hours(13).minutes(53).toDate(), value: 21.0 },
+          { date: moment().hours(14).minutes(3).toDate(), value: 22.0 },
+          { date: moment().hours(14).minutes(13).toDate(), value: 21.5 },
+          { date: moment().hours(14).minutes(23).toDate(), value: 16.0 },
+          { date: moment().hours(14).minutes(33).toDate(), value: 21.5 },
+        ]
+      },
+      {
+        id: 5,
+        nom: 'sonde5',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures:[
+          { date: moment().hours(13).minutes(53).toDate(), value: 14.0 },
+          { date: moment().hours(14).minutes(3).toDate(), value: 15.0 },
+          { date: moment().hours(14).minutes(13).toDate(), value: 14.5 },
+        ]
+      },
+
     ]);
 
-    return this.server.get(this.serverUrl + `/therm/${from.toJSON()}/${to.toJSON}`).pipe(
+    return this.server.get(this.serverUrl + `/therms/${from.toJSON()}/${to.toJSON}`).pipe(
       map((nodes: Model.Node[]) => nodes.map(node => { return node; } ))
     ) as Observable<Model.Node[]>;
    }
@@ -80,5 +105,7 @@ export class ServerService {
         ]
       },
     );
+
+    return this.server.get(this.serverUrl + `/therm/${id}/${from.toJSON()}/${to.toJSON}`) as Observable<Model.Node>;
   }    
 }
