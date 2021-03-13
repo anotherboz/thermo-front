@@ -26,8 +26,11 @@ export class MainComponent implements OnInit {
   columns = ['Label', 'Value'];
   linechartColumns = [];
 
+  dates: { from: Date; to: Date; }
+
   constructor(private server: ServerService, private myCookies: MyCookieService) {
     this.nodesFilter$ = new BehaviorSubject(myCookies.hideThermo);
+    this.dates = { from: moment().startOf('day').toDate(), to: moment().endOf('day').toDate() };
   }
 
   ngOnInit(): void {

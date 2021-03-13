@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/fonts/veofont.css",
               "src/styles.scss"
             ],
             "scripts": []

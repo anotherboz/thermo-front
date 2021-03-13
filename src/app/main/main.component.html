@@ -11,8 +11,9 @@
             <button class="close btn btn-outline-primary btn-sm" (click)="hide(gauge.id)">&times;</button>
         </div> 
     </div>
+    <app-date-picker [(dates)]="dates"></app-date-picker>
     <h3 class="text-primary text-center">
-        Températures minimales et maximales
+        Températures minimales et maximales {{ dates.from | date:'short' }} - {{ dates.to | date:'short'}}
     </h3>
     <div class="row"> 
         <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="CANDLESTICK" [data]="candlestick$|async" [options]="candlestickOptions" ></google-chart>
