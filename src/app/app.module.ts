@@ -10,7 +10,10 @@ import { NavbarComponent } from './ui/navbar/navbar.component';
 import { CookieService } from 'ngx-cookie-service';
 import { AppRouterModule } from './router/app.router.module';
 import { SondeComponent } from './sonde/sonde.component';
-import { DatePickerComponent } from './main/date-picker/date-picker.component';
+import { DatePickerComponent } from './date-picker/date-picker.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConfigComponent } from './config/config.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { DatePickerComponent } from './main/date-picker/date-picker.component';
     MainComponent,
     NavbarComponent,
     SondeComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    ConfigComponent,
   ],
   imports: [
     AppRouterModule,
@@ -26,6 +30,8 @@ import { DatePickerComponent } from './main/date-picker/date-picker.component';
     BrowserModule,
     NgbModule,
     HttpClientModule,
+    ReactiveFormsModule,
+    SweetAlert2Module.forRoot(),
   ],
   providers: [ CookieService, { provide: LOCALE_ID, useValue: 'fr-FR' } ],
   bootstrap: [AppComponent]

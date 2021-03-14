@@ -13,7 +13,7 @@
     </div>
     <app-date-picker [(dates)]="dates"></app-date-picker>
     <h3 class="text-primary text-center">
-        Températures minimales et maximales {{ dates.from | date:'short' }} - {{ dates.to | date:'short'}}
+        Températures minimales et maximales
     </h3>
     <div class="row"> 
         <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="CANDLESTICK" [data]="candlestick$|async" [options]="candlestickOptions" ></google-chart>

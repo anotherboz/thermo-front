@@ -1,8 +1,51 @@
 <a [routerLink]="['/']">
     <button class="btn btn-primary m-4">&lt;</button>
 </a>
-<div class="container-fluid mt-5">
-    <div class="row"> 
-        <google-chart class="col-12" [width]="'100%'" [type]="CANDLESTICK" [data]="data$|async" [columns]="columns" [title]="title$|async" [options]="options" ></google-chart>
+<div class="container mt-5">
+    <div>
+        <h3 class="m-4 text-primary text-center">Config</h3>
+        <form [formGroup]="formConfig" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col">
+                    <label for="min" class="form-label">Min :</label>
+                    <input id="min" type="text" formControlName="min" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="max" class="form-label">Max :</label>
+                    <input id="max" type="text" formControlName="max" class="form-control">
+                </div>              
+                <div class="col">
+                    <label for="minorTicks" class="form-label">Graduation :</label>
+                    <input id="minorTicks" type="text" formControlName="minorTicks" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="yellowFrom" class="form-label">Jaune min :</label>
+                    <input id="yellowFrom" type="text" formControlName="yellowFrom" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="yellowTo" class="form-label">Jaune max :</label>
+                    <input id="yellowTo" type="text" formControlName="yellowTo" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="redFrom" class="form-label">Rouge min :</label>
+                    <input id="redFrom" type="text" formControlName="redFrom" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="redTo" class="form-label">Rouge max :</label>
+                    <input id="redTo" type="text" formControlName="redTo" class="form-control">
+                </div>                
+            </div>
+            <div class="text-center m-5">
+                <button type="submit" class="btn" [ngClass]="postClass" >Submit</button>                
+            </div>
+        </form>
     </div>
-</div>
+    <br/><br/>
+    <h3 class="m-4 text-primary text-center">Températures</h3>
+    <app-date-picker class="m-4" [dates]="dates" (dateChange)="dateChange($event)"></app-date-picker>
+    <div class="row"> 
+        <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="CANDLESTICK" [data]="data$|async" [columns]="columns" [title]="title$|async" [options]="options" ></google-chart>
+    </div>
+</div>  

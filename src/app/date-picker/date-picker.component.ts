@@ -36,9 +36,7 @@ import * as moment from 'moment';
   */
  @Injectable()
  export class CustomDateParserFormatter extends NgbDateParserFormatter {
- 
    readonly DELIMITER = '/';
-
    constructor(@Inject(LOCALE_ID) private locale: string) {
      super();
    }
@@ -81,8 +79,6 @@ export class DatePickerComponent implements OnInit {
   constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) { }
 
   ngOnInit() {
-    console.log(this.dates);
-    
     this.fromDate = new NgbDate(this.dates.from.getFullYear(),  this.dates.from.getMonth() + 1, this.dates.from.getDate());
     this.toDate = new NgbDate(this.dates.to.getFullYear(),  this.dates.to.getMonth() + 1, this.dates.to.getDate());
   }

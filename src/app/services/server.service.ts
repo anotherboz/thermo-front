@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import * as Model from '../models/models';
 import * as moment from 'moment';
 
@@ -107,5 +107,63 @@ export class ServerService {
     );
 
     return this.server.get(this.serverUrl + `/therm/${id}/${from.toJSON()}/${to.toJSON}`) as Observable<Model.Node>;
-  }    
+  }
+  
+  public postNodeConfig(id: number, config: Model.NodeConfig): Observable<boolean> {
+    return of(false);
+
+    return this.server.post(this.serverUrl + `/node/${id}/config`, config)
+    .pipe(
+      catchError(err => { console.error(err); return of(false); }),      
+      map(o => true)
+    );
+  }
+
+  public getNodes(): Observable<Model.Node[]> {
+    return of([
+      {
+        id: 1,
+        nom: 'sonde1',
+        createdAt: new Date('2021-03-01 10:57:00'),
+        config: { min: 15, max: 45 , redFrom: 35, redTo: 45, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures: undefined
+      },
+      {
+        id: 2,
+        nom: 'sonde2',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures: undefined
+      },
+      {
+        id: 3,
+        nom: 'sonde3',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures: undefined
+      },
+      {
+        id: 4,
+        nom: 'sonde4',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures: undefined
+      },
+      {
+        id: 5,
+        nom: 'sonde5',
+        createdAt: new Date('2021-03-01 10:55:00'),
+        config: { min: 0, max: 60 , redFrom: 35, redTo: 60, yellowFrom: 25, yellowTo: 35, minorTicks: 5 },
+        temperatures: undefined
+      },
+    ]);
+  }
+
+  public getUsers(password: string): Observable<Model.User[]> {
+    return of([
+        { id: 1, mail: 'coucou@mail.com', limit: 'yellow', nodeIds: []},
+        { id: 2, mail: 'coucou2@mail.com', limit: 'red', nodeIds: [1,3, 18]}
+      ]);
+    return throwError('buggus');
+  }
 }
