@@ -172,11 +172,19 @@ export class ServerService {
     return this.server.get<Model.User[]>(this.serverUrl + '/users', { headers });
   }
 
+  public patchUser(password: string, user: Model.User): Observable<boolean> {
+    const headers = new HttpHeaders({
+      authorization: 'Basic ' + btoa('super:' + password),
+    })
+    return this.server.patch(this.serverUrl + `user/${user.id}`, user, { headers, observe: 'response' })
+      .pipe(map((res) => res.ok));
+  }
+
   public postUser(password: string, user: Model.User): Observable<boolean> {
     const headers = new HttpHeaders({
       authorization: 'Basic ' + btoa('super:' + password),
     })
-    return this.server.post(this.serverUrl + `user/${user.id}`, user, { headers, observe: 'response' })
+    return this.server.post(this.serverUrl + `user`, user, { headers, observe: 'response' })
       .pipe(map((res) => res.ok));
   }
 }

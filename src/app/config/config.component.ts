@@ -98,6 +98,10 @@ export class ConfigComponent implements OnInit {
       }
     }
     // console.log({...newUser, id: id, nodes: nodesArray});
-    this.server.postUser(this.password, {...newUser, id, nodes: nodesArray});
+    if (id) {
+      this.server.patchUser(this.password, {...newUser, id, nodes: nodesArray});
+    } else {
+      this.server.postUser(this.password, {...newUser, id, nodes: nodesArray});
+    }
   }
 }
