@@ -12,6 +12,7 @@ import * as Model from '../models/models';
 })
 export class ConfigComponent implements OnInit {
   connected = false;
+  password: string;
   buttonClass = 'btn-primary';
   users: { id: number, mail: string;  limit: string; nodeIds:number[], nodeNames: string[] }[]
   nodes: Model.Node[];
@@ -30,7 +31,8 @@ export class ConfigComponent implements OnInit {
   ngOnInit(): void { }
 
   onSubmit() {
-    this.server.getUsers(this.formGroup.get('loginControl').value).subscribe(
+    this.password = this.formGroup.get('loginControl').value;
+    this.server.getUsers(this.password).subscribe(
       users => {
         this.server.getNodes().subscribe(nodes => {
           this.users = users.map(user => ({...user, 
@@ -61,16 +63,14 @@ export class ConfigComponent implements OnInit {
   }
 
   editUser(user: { id: number, mail: string;  limit: string; nodeIds:number[] }): void {
-    let config = this.editUserForm.getRawValue();
+    let newUser = this.editUserForm.getRawValue();
     const nodesArray = [];
-    for (let key in config.nodes) {
-      if (config.nodes[key]) {
+    for (let key in newUser.nodes) {
+      if (newUser.nodes[key]) {
         nodesArray.push(Number.parseInt(key));
       }
     }
-    console.log(user);
-    
-    console.log({...config, id: user.id, nodes: nodesArray});
-    // this.server.postConfigUser({...config, nodes: nodesArray});
+//  console.log({...newUser, id: user.id, nodes: nodesArray});
+    this.server.postUser(this.password, {...newUser, id: user.id, nodes: nodesArray});
   }
 }
