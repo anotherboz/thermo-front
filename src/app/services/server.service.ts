@@ -119,7 +119,7 @@ export class ServerService {
   }
 
   public getNodes(): Observable<Model.Node[]> {
-  /*  return of([
+    return of([
       {
         id: 1,
         nom: 'sonde1',
@@ -156,16 +156,16 @@ export class ServerService {
         temperatures: undefined
       },
     ]);
-*/
+
     return this.server.get<Model.Node[]>(this.serverUrl + `/nodes`);
   }
 
   public getUsers(password: string): Observable<Model.User[]> {
-/*    return of([
+    return of([
         { id: 1, mail: 'coucou@mail.com', limit: 'yellow', nodeIds: []},
         { id: 2, mail: 'coucou2@mail.com', limit: 'red', nodeIds: [1,3, 18]}
       ]);
-*/
+
     const headers = new HttpHeaders({
       authorization: 'Basic ' + btoa('super:' + password),
     })

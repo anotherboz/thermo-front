@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { timer } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ServerService } from '../services/server.service';
 import * as Model from '../models/models';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-config',
@@ -11,6 +12,8 @@ import * as Model from '../models/models';
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
+  @ViewChild('editUserSwal') swal: SwalComponent;
+
   connected = false;
   password: string;
   buttonClass = 'btn-primary';
@@ -49,7 +52,7 @@ export class ConfigComponent implements OnInit {
     )
   }
 
-  swalUser(user: { mail: string;  limit: string; nodeIds:number[] }): void {
+  editUser(user: Model.User): void {
     const nodes = new FormGroup({});  
     this.nodes.forEach(n => {
       nodes.addControl(n.id.toString(), new FormControl(user.nodeIds.length === 0 || user.nodeIds.includes(n.id)));
@@ -58,11 +61,35 @@ export class ConfigComponent implements OnInit {
     this.editUserForm = new FormGroup({
       mail: new FormControl(user.mail),
       limit: new FormControl(user.limit),
-      nodes: nodes,
+      nodes,
+    });
+
+    this.swal.fire().then(value => {
+      if (value.isConfirmed) {
+        this.sendUser(user.id);
+      }
     });
   }
 
-  editUser(user: { id: number, mail: string;  limit: string; nodeIds:number[] }): void {
+  addUser() {
+    const nodes = new FormGroup({});  
+    this.nodes.forEach(n => {
+      nodes.addControl(n.id.toString(), new FormControl(false));
+    });
+
+    this.editUserForm = new FormGroup({
+      mail: new FormControl(''),
+      limit: new FormControl(''),
+      nodes,
+    });
+    this.swal.fire().then(value => {
+      if (value.isConfirmed) {
+        this.sendUser();
+      }
+    });
+  }
+
+  sendUser(id?: number): void {
     let newUser = this.editUserForm.getRawValue();
     const nodesArray = [];
     for (let key in newUser.nodes) {
@@ -70,7 +97,7 @@ export class ConfigComponent implements OnInit {
         nodesArray.push(Number.parseInt(key));
       }
     }
-//  console.log({...newUser, id: user.id, nodes: nodesArray});
-    this.server.postUser(this.password, {...newUser, id: user.id, nodes: nodesArray});
+    // console.log({...newUser, id: id, nodes: nodesArray});
+    this.server.postUser(this.password, {...newUser, id, nodes: nodesArray});
   }
 }

@@ -23,12 +23,13 @@
                             {{ user.nodeNames.join(', ') }}
                         </td>
                         <td>
-                            <button class="btn btn-outline-primary" [swal]="editUserSwal" (click)="swalUser(user)" (confirm)="editUser(user)"><span class="vf-create"></span></button>
+                            <button class="btn btn-outline-primary" (click)="editUser(user)"><span class="vf-create"></span></button>
                         </td>
                     </tr> 
                 </tbody>
             </table>
         </div>
+        <button class="btn btn-primary" (click)="addUser()">Ajouter un utilisateur</button>
     </div>
 </div>
 
