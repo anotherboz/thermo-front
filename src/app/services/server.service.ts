@@ -16,13 +16,13 @@ export class ServerService {
    }
 
    public getTherms(from: Date, to: Date): Observable<Model.Node[]> {
-    return this.server.get(this.serverUrl + `/therms/${from.toJSON()}/${to.toJSON}`).pipe(
+    return this.server.get(this.serverUrl + `/therms/${from.toJSON()}/${to.toJSON()}`).pipe(
       map((nodes: Model.Node[]) => nodes.map(node => { return node; } ))
     ) as Observable<Model.Node[]>;
    }
 
    public getTherm(id: number, from: Date, to: Date): Observable<Model.Node> {
-    return this.server.get(this.serverUrl + `/therm/${id}/${from.toJSON()}/${to.toJSON}`) as Observable<Model.Node>;
+    return this.server.get(this.serverUrl + `/therm/${id}/${from.toJSON()}/${to.toJSON()}`) as Observable<Model.Node>;
   }
   
   public postNodeConfig(id: number, config: Model.NodeConfig): Observable<boolean> {
@@ -33,7 +33,7 @@ export class ServerService {
     );
   }
 
-  public getNodes(): Observable<Model.Node[]> {
+  public getNodes(): Observable<Model.Node[]> {
     return this.server.get<Model.Node[]>(this.serverUrl + `/nodes`);
   }
 
