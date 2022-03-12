@@ -3,7 +3,7 @@ import { ServerService } from '../services/server.service';
 import * as Model from '../models/models';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import * as Charts from 'angular-google-charts'
 import { MyCookieService } from '../services/my-cookie.service';
 
@@ -40,31 +40,38 @@ export class MainComponent implements OnInit {
     ]).pipe(
       map(([filter, nodes]) => nodes.filter(n => !filter.includes(n.id))));
 
-    this.gauges$ = this.nodes$.pipe(map(nodes =>  nodes.map(node =>  ({
+    this.gauges$ = this.nodes$.pipe(
+      map(nodes =>  nodes.map(node =>  ({
       config: { ...node.config },
       id: node.id,
-      data: [[ node.nom, node.temperatures[node.temperatures.length - 1].value]]
+      data: [[ node.nom, node.temperatures[node.temperatures.length - 1]?.value ?? 0]]
      }))));
 
     this.candlestick$ = this.nodes$.pipe(map(nodes => nodes.map(node => {
-      const min = node.temperatures.reduce((min, current) => min < current.value ? min : current.value, node.temperatures[0].value);
-      const max = node.temperatures.reduce((max, current) => max > current.value ? max : current.value, node.temperatures[0].value);
+    let min, max;
+      if (node.temperatures && node.temperatures.length) {
+        min = node.temperatures.reduce((min, current) => min < current.value ? min : current.value, node.temperatures[0].value);
+        max = node.temperatures.reduce((max, current) => max > current.value ? max : current.value, node.temperatures[0].value);
+      } else {
+        min = 0;
+        max = 0;
+      }
       return [ node.nom, min, min, max, max ];
     })));
 
     this.linechart$ = this.nodes$.pipe(map(nodes => {
       this.linechartColumns = ['Heure', ...nodes.map(n => n.nom)]
-      let datas: (string|number)[][] = [];
       if (nodes.length > 0) {
+        let datas: (string|number)[][] = [];
+        // node[0] contains x axis time and temperature array count
         nodes[0].temperatures.forEach((t, index) => datas.push([
           t.date.toLocaleTimeString('FR-fr', {hour: '2-digit', minute:'2-digit'}),
-          ...nodes.map(n => n.temperatures[index]?.value ?? 0) ]))
+          ...nodes.map(n => n.temperatures[index]?.value ?? 0) ]));
+        return datas?.length ? datas : undefined;
+      } else {
+        return undefined;
       }
-      datas.push()
-      return datas;
     }));
-
-    this.linechart$.subscribe(l => console.log(l));
   }
 
   hide(id: number) {

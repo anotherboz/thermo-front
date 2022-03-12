@@ -3,7 +3,7 @@
     <h3 class="m-4 text-primary text-center">
         Températures actuelles
     </h3>
-    <div class="row">
+    <div class="row justify-content-center">
         <div *ngFor="let gauge of gauges$|async" class="gauge col-12 col-sm-6 col-lg-2 text-center">
             <a [routerLink]="['/sonde', gauge.id]">
                 <google-chart class="d-inline-block" [type]="GAUGE" [data]="gauge.data" [columns]="columns" [options]="gauge.config"></google-chart>
@@ -15,13 +15,13 @@
     <h3 class="text-primary text-center">
         Températures minimales et maximales
     </h3>
-    <div class="row"> 
-        <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="CANDLESTICK" [data]="candlestick$|async" [options]="candlestickOptions" ></google-chart>
+    <div *ngIf="candlestick$|async as candlestick" class="row"> 
+        <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="CANDLESTICK" [data]="candlestick" [options]="candlestickOptions" ></google-chart>
     </div>
     <h3 class="text-primary text-center">
         Courbes des températures
     </h3>
-    <div class="row"> 
-        <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="LINECHART" [data]="linechart$|async" [columns]="linechartColumns" [options]="linechartOptions" ></google-chart>
+    <div *ngIf="linechart$|async as linechart" class="row"> 
+        <google-chart class="col-12" [width]="'100%'" [height]="500" [type]="LINECHART" [data]="linechart" [columns]="linechartColumns" [options]="linechartOptions" ></google-chart>
     </div>
 </div>
