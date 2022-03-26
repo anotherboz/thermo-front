@@ -40,6 +40,7 @@
           },
           "configurations": {
             "production": {
+              "index": "src/index.prod.html",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
